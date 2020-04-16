@@ -46,7 +46,7 @@ namespace MovieManager.ImportConsole
                     .GroupBy(movie => movie.Category)
                     .Select(_ => _.Key);
 
-                Console.WriteLine($"  Es wurden {movies.Count()} Movies in {categories.Count()} Kategorien eingelesen!");
+                Console.WriteLine($"  Es wurden {movies.Count()} Movies in {(categories.Count())} Kategorien eingelesen!");
 
                 unitOfWork.MovieRepository.AddRange(movies);
                 unitOfWork.Save();
@@ -67,23 +67,32 @@ namespace MovieManager.ImportConsole
                 // Längster Film: Bei mehreren gleichlangen Filmen, soll jener angezeigt werden, dessen Titel im Alphabet am weitesten vorne steht.
                 // Die Dauer des längsten Films soll in Stunden und Minuten angezeigt werden!
                 var movieWithLongestDuration = unitOfWork.MovieRepository.GetMovieWithLongestDuration();
-                Console.WriteLine($"Längster Film: {movieWithLongestDuration.Title}; Länge: {movieWithLongestDuration.Duration}");
+                Console.WriteLine($"Längster Film: {movieWithLongestDuration.Title}; Länge: {GetDurationAsString(movieWithLongestDuration.Duration)}");
+                Console.WriteLine();
 
                 // Top Kategorie:
                 //   - Jene Kategorie mit den meisten Filmen.
-                //TODO
-
+                var categorieWithMostMovies = unitOfWork.MovieRepository.GetCategorieWithMostMovies();
+                Console.WriteLine($"Kategorie mit den meisten Filmen: '{categorieWithMostMovies.Categorie}'; Filme: {categorieWithMostMovies.CountMovies}");
+                Console.WriteLine();
 
                 // Jahr der Kategorie "Action":
                 //  - In welchem Jahr wurden die meisten Action-Filme veröffentlicht?
-                //TODO
-
+                int yearWithMostActionMovies = unitOfWork.MovieRepository.GetYearWithMostActionMovies();
+                Console.WriteLine($"Jahr der Action-Filme: {yearWithMostActionMovies}");
+                Console.WriteLine();
 
                 // Kategorie Auswertung (Teil 1):
                 //   - Eine Liste in der je Kategorie die Anzahl der Filme und deren Gesamtdauer dargestellt wird.
                 //   - Sortiert nach dem Namen der Kategorie (aufsteigend).
                 //   - Die Gesamtdauer soll in Stunden und Minuten angezeigt werden!
-                //TODO
+                var listOfCategories = unitOfWork.CategoryRepository.GetListOfCategories();
+
+                foreach (var category in listOfCategories)
+                {
+                    Console.WriteLine($"{category.Categories, -20}{category.Count, -20}{GetDurationAsString(category.Duration), -20}");
+                }
+                Console.WriteLine();
 
 
                 // Kategorie Auswertung (Teil 2):
@@ -91,16 +100,27 @@ namespace MovieManager.ImportConsole
                 //   - Absteigend sortiert nach der durchschnittlichen Dauer der Filme.
                 //     Bei gleicher Dauer dann nach dem Namen der Kategorie aufsteigend sortieren.
                 //   - Die Gesamtdauer soll in Stunden, Minuten und Sekunden angezeigt werden!
-                //TODO
+                var listOfCategoriesWithAvgDuration = unitOfWork.CategoryRepository.GetListOfCategoriesWithAvgDuration();
 
-
+                foreach (var category in listOfCategoriesWithAvgDuration)
+                {
+                    Console.WriteLine($"{category.Categories,-20}{GetDurationAsString(category.Duration),-20}");
+                }
+                Console.WriteLine();
 
             }
         }
 
-        private static string GetDurationAsString(double minutes, bool withSeconds = true)
+        private static string GetDurationAsString(double minutes, bool withSeconds = false)
         {
-            throw new NotImplementedException();
+            if (withSeconds)
+            {
+                return $"{(int)minutes / 60:d2} h {(int)minutes % 60:d2} min {(minutes-(int)minutes)*60 :d2} sec";
+            }
+            else
+            {
+                return $"{(int)minutes / 60:d2} h {(int)minutes % 60:d2} min";
+            }
         }
     }
 }
