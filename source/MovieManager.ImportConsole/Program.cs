@@ -104,7 +104,7 @@ namespace MovieManager.ImportConsole
 
                 foreach (var category in listOfCategoriesWithAvgDuration)
                 {
-                    Console.WriteLine($"{category.Categories,-20}{GetDurationAsString(category.Duration),-20}");
+                    Console.WriteLine($"{category.Categories,-20}{GetDurationAsString(category.Duration, true),-20}");
                 }
                 Console.WriteLine();
 
@@ -115,7 +115,7 @@ namespace MovieManager.ImportConsole
         {
             if (withSeconds)
             {
-                return $"{(int)minutes / 60:d2} h {(int)minutes % 60:d2} min {(minutes-(int)minutes)*60 :d2} sec";
+                return $"{(int)minutes / 60:d2} h {(int)minutes % 60:d2} min {(int)(minutes * 60 % 60) :d2} sec";
             }
             else
             {
