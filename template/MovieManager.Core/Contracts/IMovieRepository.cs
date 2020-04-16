@@ -1,7 +1,6 @@
 ﻿namespace MovieManager.Core.Contracts
 {
-    public interface ICategoryRepository
+    public interface IMovieRepository
     {
-
     }
 }
