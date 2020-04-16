@@ -88,9 +88,13 @@ namespace MovieManager.ImportConsole
                 //   - Die Gesamtdauer soll in Stunden und Minuten angezeigt werden!
                 var listOfCategories = unitOfWork.CategoryRepository.GetListOfCategories();
 
+                Console.WriteLine("Kategorie Auswertung:");
+                Console.WriteLine();
+                Console.WriteLine($"{"Kategorie", -15}{"Anzahl", -10}Gesamtdauer");
+                Console.WriteLine(new String('=', 37));
                 foreach (var category in listOfCategories)
                 {
-                    Console.WriteLine($"{category.Categories, -20}{category.Count, -20}{GetDurationAsString(category.Duration), -20}");
+                    Console.WriteLine($"{category.Categories, -17}{category.Count, -8}{GetDurationAsString(category.Duration)}");
                 }
                 Console.WriteLine();
 
@@ -102,9 +106,12 @@ namespace MovieManager.ImportConsole
                 //   - Die Gesamtdauer soll in Stunden, Minuten und Sekunden angezeigt werden!
                 var listOfCategoriesWithAvgDuration = unitOfWork.CategoryRepository.GetListOfCategoriesWithAvgDuration();
 
+                Console.WriteLine();
+                Console.WriteLine($"{"Kategorie",-15}durchschn. Gesamtdauer");
+                Console.WriteLine(new String('=', 37));
                 foreach (var category in listOfCategoriesWithAvgDuration)
                 {
-                    Console.WriteLine($"{category.Categories,-20}{GetDurationAsString(category.Duration, true),-20}");
+                    Console.WriteLine($"{category.Categories,-15}{GetDurationAsString(category.Duration, true)}");
                 }
                 Console.WriteLine();
 
