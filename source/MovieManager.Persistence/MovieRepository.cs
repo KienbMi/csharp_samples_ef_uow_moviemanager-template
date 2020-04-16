@@ -23,14 +23,11 @@ namespace MovieManager.Persistence
 
         public (string Categorie, int CountMovies) GetCategorieWithMostMovies()
         {
-            var category = _dbContext.Movies
-                .Include(movie => movie.Category)
-                .ToArray()
-                .GroupBy(movie => movie.Category)
+            var category = _dbContext.Categories
                 .Select(_ => new
                 {
-                    Category = _.Key.CategoryName,
-                    Count = _.Key.Movies.Count()
+                    Category = _.CategoryName,
+                    Count = _.Movies.Count()
                 })
                 .OrderByDescending(_ => _.Count)
                 .First();
@@ -50,16 +47,15 @@ namespace MovieManager.Persistence
 
         public int GetYearWithMostActionMovies()
         {
-            return 2008;
-
             return _dbContext.Movies
-                .Where(movie => movie.Category.Equals("Action"))
+                .Where(movie => movie.Category.CategoryName.Equals("Action"))
                 .GroupBy(movie => movie.Year)
                 .Select(_ => new
                 {
-                    _.Key
+                    _.Key,
+                    Count = _.Count()
                 })
-                .OrderByDescending(_ => _.Key)
+                .OrderByDescending(_ => _.Count)
                 .First().Key;
         }
     }
