@@ -23,6 +23,7 @@ namespace MovieManager.Persistence
 
         public (string Categorie, int CountMovies) GetCategorieWithMostMovies()
         {
+            // KORREKTUR: Linq Abfrage von Categories und damit auf Datenbankebene
             var category = _dbContext.Categories
                 .Select(_ => new
                 {
@@ -47,6 +48,7 @@ namespace MovieManager.Persistence
 
         public int GetYearWithMostActionMovies()
         {
+            // KORREKTUR: Linq Abfrage Fehler behogen
             return _dbContext.Movies
                 .Where(movie => movie.Category.CategoryName.Equals("Action"))
                 .GroupBy(movie => movie.Year)
